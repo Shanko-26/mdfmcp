@@ -120,6 +120,18 @@ your-project/
 - `"/absolute/path/file.mf4"` → Full absolute path
 - Case insensitive: `"DATA.MF4"` finds `"data.mf4"`
 
+## 🔄 Updating
+
+uvx caches packages for stability. To get the latest version:
+
+```bash
+uvx install --force mcp-server-mdf  # Recommended
+# or
+uvx uninstall mcp-server-mdf && uvx mcp-server-mdf
+```
+
+Restart your IDE after updating.
+
 ## 📊 Usage Examples
 
 ### Open and Analyze MDF Files
