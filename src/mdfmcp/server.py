@@ -998,8 +998,10 @@ class MdfMcpServer:
 def main():
     """Main entry point for uvx distribution"""
     import argparse
+    from . import __version__
     
     parser = argparse.ArgumentParser(description="MDF MCP Server")
+    parser.add_argument("--version", action="version", version=f"mcp-server-mdf {__version__}")
     parser.add_argument("--max-sessions", type=int, default=10, help="Maximum concurrent sessions")
     parser.add_argument("--session-timeout", type=int, default=3600, help="Session timeout in seconds")
     

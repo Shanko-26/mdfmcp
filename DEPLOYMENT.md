@@ -67,7 +67,7 @@ your-project/
   "mcpServers": {
     "mdf": {
       "command": "uvx",
-      "args": ["mcp-server-mdf"]
+      "args": ["mcp-server-mdf@latest"]
     }
   }
 }
@@ -131,26 +131,27 @@ which uv
 - Verify no stderr output in server code
 - Test with: `echo '{"jsonrpc":"2.0","method":"initialize",...}' | uvx mcp-server-mdf`
 
-### Updating to Latest Version
+### Always Use Latest Version
 
-**Important**: uvx caches installed packages for stability. To get the latest version:
+**Recommended**: Configure your IDE to always use the latest version:
 
-```bash
-# Method 1: Force reinstall (recommended)
-uvx install --force mcp-server-mdf
-
-# Method 2: Uninstall and reinstall  
-uvx uninstall mcp-server-mdf
-uvx mcp-server-mdf
-
-# Check current version
-uvx run mcp-server-mdf --help
-
-# Check what's available on PyPI
-pip index versions mcp-server-mdf
+```json
+{
+  "mcpServers": {
+    "mdf": {
+      "command": "uvx",
+      "args": ["mcp-server-mdf@latest"]
+    }
+  }
+}
 ```
 
-**After updating**: Restart your IDE to use the new version.
+**Benefits**:
+- ✅ Always gets newest features and fixes
+- ✅ No manual update process needed
+- ✅ Fresh download ensures clean environment
+
+**Check version**: `uvx mcp-server-mdf@latest --version`
 
 ### Dependencies
 All dependencies are automatically managed by uvx. No manual Python environment setup required.

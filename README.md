@@ -54,7 +54,7 @@ Add to your MCP configuration:
   "mcpServers": {
     "mdf": {
       "command": "uvx",
-      "args": ["mcp-server-mdf"]
+      "args": ["mcp-server-mdf@latest"]
     }
   }
 }
@@ -69,7 +69,7 @@ Add to `~/.cursor/mcp.json`:
   "mcpServers": {
     "mdf": {
       "command": "uvx",
-      "args": ["mcp-server-mdf"]
+      "args": ["mcp-server-mdf@latest"]
     }
   }
 }
@@ -120,17 +120,22 @@ your-project/
 - `"/absolute/path/file.mf4"` → Full absolute path
 - Case insensitive: `"DATA.MF4"` finds `"data.mf4"`
 
-## 🔄 Updating
+## 🔄 Staying Current
 
-uvx caches packages for stability. To get the latest version:
+**Always use latest version** by adding `@latest` to your IDE configuration:
 
-```bash
-uvx install --force mcp-server-mdf  # Recommended
-# or
-uvx uninstall mcp-server-mdf && uvx mcp-server-mdf
+```json
+{
+  "mcpServers": {
+    "mdf": {
+      "command": "uvx",
+      "args": ["mcp-server-mdf@latest"]
+    }
+  }
+}
 ```
 
-Restart your IDE after updating.
+**Check version**: `uvx mcp-server-mdf@latest --version`
 
 ## 📊 Usage Examples
 
