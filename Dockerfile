@@ -22,6 +22,9 @@ COPY src/ ./src/
 RUN useradd -m -u 1000 mdfmcp && chown -R mdfmcp:mdfmcp /app
 USER mdfmcp
 
+# Set Python path
+ENV PYTHONPATH=/app/src
+
 # Expose port for HTTP transport (optional)
 EXPOSE 8000
 
