@@ -14,25 +14,9 @@
    uvx mcp-server-mdf
    ```
 
-3. **Configure in Claude Desktop**:
+3. **Configure in your IDE**:
    
-   Edit your Claude Desktop config file:
-   - **macOS**: `~/Library/Application Support/Claude/claude_desktop_config.json`
-   - **Windows**: `%AppData%\Claude\claude_desktop_config.json`
-   
-   Add this configuration:
-   ```json
-   {
-     "mcpServers": {
-       "mdf": {
-         "command": "uvx",
-         "args": ["mcp-server-mdf"]
-       }
-     }
-   }
-   ```
-
-4. **Restart Claude Desktop** - the MDF tools will appear in the interface
+   **Note**: This MCP server requires file system access to read MDF files. Use it with IDEs that support local file access like VS Code with Continue.dev or Cursor IDE.
 
 ### Advanced Configuration
 

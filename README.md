@@ -41,24 +41,11 @@ mcp-server-mdf
 
 ## 🔧 Configuration
 
-### For Claude Desktop
+**Important**: This MCP server requires direct file system access to read MDF files. It works best with IDEs that support local file operations.
 
-Edit your configuration file:
-- **macOS**: `~/Library/Application Support/Claude/claude_desktop_config.json`
-- **Windows**: `%AppData%\Claude\claude_desktop_config.json`
+### Compatible IDEs
 
-```json
-{
-  "mcpServers": {
-    "mdf": {
-      "command": "uvx",
-      "args": ["mcp-server-mdf"]
-    }
-  }
-}
-```
-
-### For VS Code with Continue.dev
+#### For VS Code with Continue.dev
 
 Add to your MCP configuration:
 
@@ -73,7 +60,7 @@ Add to your MCP configuration:
 }
 ```
 
-### For Cursor IDE
+#### For Cursor IDE
 
 Add to `~/.cursor/mcp.json`:
 
@@ -87,6 +74,10 @@ Add to `~/.cursor/mcp.json`:
   }
 }
 ```
+
+#### For Windsurf/Codeium
+
+Follow your IDE's MCP configuration guide with the same uvx command.
 
 ## 📊 Usage Examples
 
