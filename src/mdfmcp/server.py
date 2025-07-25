@@ -30,8 +30,7 @@ except ImportError as e:
     print("Please install: pip install asammdf numpy pandas matplotlib")
     raise
 
-# Configure logging
-logging.basicConfig(level=logging.INFO)
+# Configure logging - avoid stderr output for MCP compatibility  
 logger = logging.getLogger(__name__)
 
 @dataclass
@@ -93,15 +92,21 @@ class MdfMcpServer:
         self._setup_handlers()
     
     def _setup_logging(self):
-        """Configure server logging"""
-        try:
-            self.server.request_context.log_message(
-                level=LoggingLevel.INFO,
-                data=f"MDF MCP Server initialized (max_sessions={self.max_sessions})"
-            )
-        except LookupError:
-            # Not in MCP context (e.g., during testing)
-            logger.info(f"MDF MCP Server initialized (max_sessions={self.max_sessions})")
+        """Configure server logging for MCP compatibility"""
+        # MCP uses stderr for protocol communication, so we must avoid stderr output
+        # Use only file logging or null handler to prevent interference
+        root_logger = logging.getLogger()
+        root_logger.handlers.clear()  # Remove default handlers
+        
+        # Add null handler to prevent any stderr output
+        null_handler = logging.NullHandler()
+        root_logger.addHandler(null_handler)
+        root_logger.setLevel(logging.WARNING)  # Only critical errors
+        
+        # Optional: Add file logging if needed for debugging
+        # file_handler = logging.FileHandler('/tmp/mdfmcp.log')
+        # file_handler.setFormatter(logging.Formatter('%(asctime)s - %(levelname)s - %(message)s'))
+        # root_logger.addHandler(file_handler)
     
     def _generate_tools(self):
         """Generate MCP tools from MDF methods and custom tools"""
@@ -896,7 +901,7 @@ class MdfMcpServer:
             )
 
 def main():
-    """Entry point for the MCP server"""
+    """Main entry point for uvx distribution"""
     import argparse
     
     parser = argparse.ArgumentParser(description="MDF MCP Server")

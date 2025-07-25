@@ -1,0 +1,19 @@
+MCP Server for MDF Files
+Copyright (c) 2024 Shanko
+
+This project includes the following third-party software:
+
+asammdf
+Copyright (c) Daniel Hrisca
+Licensed under LGPL v3+
+https://github.com/danielhrisca/asammdf
+
+This software uses asammdf as a dependency for MDF file processing.
+asammdf is distributed as a separate library and is not modified by this project.
+For the full LGPL v3+ license text, see: https://www.gnu.org/licenses/lgpl-3.0.html
+
+Model Context Protocol (MCP)
+Copyright (c) Anthropic
+https://modelcontextprotocol.io
+
+Other dependencies (NumPy, Pandas, Matplotlib) retain their respective licenses.

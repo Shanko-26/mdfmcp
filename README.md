@@ -4,28 +4,30 @@ A Model Context Protocol (MCP) server for analyzing ASAM MDF (Measurement Data F
 
 ## 🚀 Quick Start
 
-### Using Docker (Recommended)
+### Using uvx (Recommended)
 
 ```bash
-# Build the Docker image
-docker build -t mdfmcp .
+# Install uv (if not already installed)
+curl -LsSf https://astral.sh/uv/install.sh | sh
 
-# Run the server
-docker run -it --rm mdfmcp
+# Run the server directly
+uvx mcp-server-mdf
 ```
 
 ### Local Development
 
 ```bash
 # Clone and setup
-git clone https://github.com/yourusername/mdfmcp
+git clone https://github.com/shanko26/mdfmcp
 cd mdfmcp
 
-# Install dependencies
-pip install -r requirements.txt
+# Install in virtual environment
+python -m venv venv
+source venv/bin/activate  # On Windows: venv\Scripts\activate
+pip install -e .
 
 # Run the server
-python -m mdfmcp.server
+mcp-server-mdf
 ```
 
 ## 📋 Features
@@ -39,6 +41,38 @@ python -m mdfmcp.server
 
 ## 🔧 Configuration
 
+### For Claude Desktop
+
+Edit your configuration file:
+- **macOS**: `~/Library/Application Support/Claude/claude_desktop_config.json`
+- **Windows**: `%AppData%\Claude\claude_desktop_config.json`
+
+```json
+{
+  "mcpServers": {
+    "mdf": {
+      "command": "uvx",
+      "args": ["mcp-server-mdf"]
+    }
+  }
+}
+```
+
+### For VS Code with Continue.dev
+
+Add to your MCP configuration:
+
+```json
+{
+  "mcpServers": {
+    "mdf": {
+      "command": "uvx",
+      "args": ["mcp-server-mdf"]
+    }
+  }
+}
+```
+
 ### For Cursor IDE
 
 Add to `~/.cursor/mcp.json`:
@@ -46,25 +80,9 @@ Add to `~/.cursor/mcp.json`:
 ```json
 {
   "mcpServers": {
-    "mdfmcp": {
-      "command": "docker",
-      "args": ["run", "--rm", "-i", "mdfmcp"]
-    }
-  }
-}
-```
-
-### For Other MCP Clients
-
-```json
-{
-  "mcpServers": {
-    "mdfmcp": {
-      "command": "python",
-      "args": ["-m", "mdfmcp.server"],
-      "env": {
-        "PYTHONPATH": "/path/to/mdfmcp/src"
-      }
+    "mdf": {
+      "command": "uvx",
+      "args": ["mcp-server-mdf"]
     }
   }
 }
@@ -141,39 +159,38 @@ Engine Speed Analysis:
 - `mdf_convert` - Convert between MDF versions
 - `mdf_save` - Save modified file
 
-## 🐳 Docker Deployment
+## 🐳 Docker Deployment (Alternative)
 
 ### Build Image
 
 ```bash
-docker build -t mdfmcp .
+docker build -t mcp-server-mdf .
 ```
 
 ### Run Container
 
 ```bash
 # Basic run
-docker run -it --rm mdfmcp
+docker run -it --rm mcp-server-mdf
 
 # With volume mount for data
-docker run -it --rm -v /path/to/mdf/files:/data mdfmcp
+docker run -it --rm -v /path/to/mdf/files:/data mcp-server-mdf
 
 # With custom environment
-docker run -it --rm -e MAX_SESSIONS=20 mdfmcp
+docker run -it --rm -e MAX_SESSIONS=20 mcp-server-mdf
 ```
 
-### Docker Compose
+### MCP Configuration for Docker
 
-```yaml
-version: '3.8'
-services:
-  mdfmcp:
-    build: .
-    volumes:
-      - ./data:/data
-    environment:
-      - MAX_SESSIONS=10
-      - SESSION_TIMEOUT=3600
+```json
+{
+  "mcpServers": {
+    "mdf": {
+      "command": "docker",
+      "args": ["run", "--rm", "-i", "-v", "/path/to/data:/data", "mcp-server-mdf"]
+    }
+  }
+}
 ```
 
 ## 🧪 Testing
@@ -251,11 +268,15 @@ mypy src/
    - Ensure Docker is running
    - Check Dockerfile syntax
 
-## 📄 License
-
-MIT License - see [LICENSE](LICENSE) file for details
-
 ## 🙏 Acknowledgments
 
-- Built on [asammdf](https://github.com/danielhrisca/asammdf) by Daniel Hrisca
+- Built on [asammdf](https://github.com/danielhrisca/asammdf) by Daniel Hrisca (LGPL v3+)
 - Uses the [Model Context Protocol](https://modelcontextprotocol.io) by Anthropic
+- Matplotlib for plotting capabilities
+- Pandas and NumPy for data processing
+
+## 📄 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+**Dependencies**: This project uses asammdf which is licensed under LGPL v3+. The asammdf library remains a separate component and is not modified by this project.
