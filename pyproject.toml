@@ -44,9 +44,9 @@ dev = [
 mcp-server-mdf = "mdfmcp.server:main"
 
 [project.urls]
-Homepage = "https://github.com/shanko26/mdfmcp"
-Repository = "https://github.com/shanko26/mdfmcp"
-Issues = "https://github.com/shanko26/mdfmcp/issues"
+Homepage = "https://github.com/Shanko-26"
+Repository = "https://github.com/Shanko-26/mdfmcp"
+Issues = "https://github.com/Shanko-26/mdfmcp/issues"
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/mdfmcp"]

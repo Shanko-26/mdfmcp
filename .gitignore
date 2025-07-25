@@ -262,3 +262,8 @@ logs/
 
 # Auto-generated files
 =* 
+# Security - NEVER commit these
+.pypirc
+.env
+*.pem
+*.key
