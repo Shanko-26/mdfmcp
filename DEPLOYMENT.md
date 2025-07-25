@@ -18,6 +18,35 @@
    
    **Note**: This MCP server requires file system access to read MDF files. Use it with IDEs that support local file access like VS Code with Continue.dev or Cursor IDE.
 
+   **If you get "command not found" errors**, find your uvx path:
+   ```bash
+   which uvx  # On macOS/Linux
+   where uvx  # On Windows
+   ```
+   Then use the full path in your IDE configuration (e.g., `/Users/username/.local/bin/uvx`).
+
+### File Organization
+
+**Workspace-Focused File Handling**: The MCP server intelligently searches for MDF files in your project workspace:
+
+```
+your-project/
+├── your_data.mf4           # ✅ Found automatically
+├── data/
+│   └── measurements.mf4    # ✅ Found automatically  
+├── measurements/
+│   └── test_run.mf4        # ✅ Found automatically
+├── test_data/
+├── examples/
+└── samples/
+```
+
+**Usage Examples**:
+- **Filename only**: `"test_data.mf4"` → searches workspace directories
+- **Relative path**: `"./data/measurements.mf4"` → relative to current directory
+- **Absolute path**: `"/full/path/to/file.mf4"` → always works
+- **Case insensitive**: `"TEST.MF4"` finds `"test.mf4"`
+
 ### Advanced Configuration
 
 **With custom arguments**:

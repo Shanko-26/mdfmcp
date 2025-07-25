@@ -18,7 +18,7 @@ uvx mcp-server-mdf
 
 ```bash
 # Clone and setup
-git clone https://github.com/shanko26/mdfmcp
+git clone https://github.com/Shanko-26/mdfmcp
 cd mdfmcp
 
 # Install in virtual environment
@@ -78,6 +78,47 @@ Add to `~/.cursor/mcp.json`:
 #### For Windsurf/Codeium
 
 Follow your IDE's MCP configuration guide with the same uvx command.
+
+#### Troubleshooting uvx Path Issues
+
+If you get "command not found" errors, find your uvx path:
+```bash
+which uvx  # On macOS/Linux  
+where uvx  # On Windows
+```
+Then use the full path in your configuration:
+```json
+{
+  "mcpServers": {
+    "mdf": {
+      "command": "/Users/username/.local/bin/uvx",
+      "args": ["mcp-server-mdf"]
+    }
+  }
+}
+```
+
+## 📁 File Organization
+
+**Smart Workspace Search**: The server automatically finds MDF files in your project:
+
+```
+your-project/
+├── data.mf4              # ✅ Found by filename
+├── data/
+│   └── test.mf4          # ✅ Found in data/ folder
+├── measurements/
+│   └── run1.mf4          # ✅ Found in measurements/ folder
+├── test_data/
+├── examples/
+└── samples/
+```
+
+**Usage Examples**:
+- `"data.mf4"` → Searches workspace automatically
+- `"./data/test.mf4"` → Relative path from current directory  
+- `"/absolute/path/file.mf4"` → Full absolute path
+- Case insensitive: `"DATA.MF4"` finds `"data.mf4"`
 
 ## 📊 Usage Examples
 

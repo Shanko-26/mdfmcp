@@ -91,6 +91,99 @@ class MdfMcpServer:
         self._generate_tools()
         self._setup_handlers()
     
+    def _resolve_file_path(self, path_str: str) -> Optional[Path]:
+        """Smart file path resolution with multiple strategies"""
+        import os
+        
+        # Strategy 1: Try as-is (absolute path)
+        path = Path(path_str)
+        if path.exists() and path.is_file():
+            return path.resolve()
+        
+        # Strategy 2: Try relative to current working directory
+        cwd_path = Path.cwd() / path_str
+        if cwd_path.exists() and cwd_path.is_file():
+            return cwd_path.resolve()
+        
+        # Strategy 3: Try relative to user home
+        if not path.is_absolute():
+            home_path = Path.home() / path_str
+            if home_path.exists() and home_path.is_file():
+                return home_path.resolve()
+        
+        # Strategy 4: Search workspace and common project subdirectories
+        search_locations = [
+            Path.cwd(),
+            Path.cwd() / "data",
+            Path.cwd() / "mdf",
+            Path.cwd() / "measurements", 
+            Path.cwd() / "test_data",
+            Path.cwd() / "examples",
+            Path.cwd() / "samples"
+        ]
+        
+        filename = Path(path_str).name  # Extract just the filename
+        for location in search_locations:
+            if location.exists():
+                candidate = location / filename
+                if candidate.exists() and candidate.is_file():
+                    return candidate.resolve()
+        
+        # Strategy 5: Look for files with similar names (case-insensitive)
+        if filename:
+            for location in search_locations:
+                if location.exists() and location.is_dir():
+                    for file in location.iterdir():
+                        if (file.is_file() and 
+                            file.name.lower() == filename.lower() and
+                            file.suffix.lower() in ['.mf4', '.mdf', '.dat']):
+                            return file.resolve()
+        
+        return None
+    
+    def _get_file_not_found_help(self, original_path: str) -> str:
+        """Generate helpful error message with suggestions"""
+        import os
+        
+        suggestions = []
+        
+        # Show current working directory
+        suggestions.append(f"Current working directory: {Path.cwd()}")
+        
+        # Find MDF files in workspace locations
+        mdf_files = []
+        search_locations = [
+            ("current directory", Path.cwd()),
+            ("data folder", Path.cwd() / "data"),
+            ("mdf folder", Path.cwd() / "mdf"),
+            ("measurements folder", Path.cwd() / "measurements"),
+            ("test_data folder", Path.cwd() / "test_data"),
+            ("examples folder", Path.cwd() / "examples"),
+            ("samples folder", Path.cwd() / "samples")
+        ]
+        
+        for location_name, location in search_locations:
+            if location.exists() and location.is_dir():
+                for file in location.iterdir():
+                    if file.is_file() and file.suffix.lower() in ['.mf4', '.mdf', '.dat']:
+                        mdf_files.append(f"  • {file.resolve()} ({location_name})")
+                        if len(mdf_files) >= 10:  # Limit to 10 files
+                            break
+        
+        error_msg = f"File not found: {original_path}\n\n"
+        
+        if mdf_files:
+            error_msg += "Found these MDF files in workspace:\n"
+            error_msg += "\n".join(mdf_files[:10])
+            if len(mdf_files) > 10:
+                error_msg += f"\n  ... and {len(mdf_files) - 10} more"
+            error_msg += "\n\nTip: Use just the filename, relative path, or full absolute path."
+        else:
+            error_msg += "No MDF files found in current workspace.\n"
+            error_msg += "Tip: Place MDF files in the current directory, data/, measurements/, or other project subdirectories."
+        
+        return error_msg
+    
     def _setup_logging(self):
         """Configure server logging for MCP compatibility"""
         # MCP uses stderr for protocol communication, so we must avoid stderr output
@@ -391,10 +484,12 @@ class MdfMcpServer:
             return json.dumps({"error": "Unknown resource"})
     
     async def _handle_open_mdf(self, args: Dict[str, Any]) -> List[Any]:
-        """Open an MDF file"""
-        file_path = Path(args["file_path"])
-        if not file_path.exists():
-            return [TextContent(type="text", text=f"File not found: {file_path}")]
+        """Open an MDF file with smart path resolution"""
+        original_path = args["file_path"]
+        file_path = self._resolve_file_path(original_path)
+        
+        if file_path is None:
+            return [TextContent(type="text", text=self._get_file_not_found_help(original_path))]
         
         # Check session limit
         if len(self.sessions) >= self.max_sessions:
