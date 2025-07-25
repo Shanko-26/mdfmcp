@@ -1,0 +1,16 @@
+version: '3.8'
+
+services:
+  mdfmcp:
+    build: .
+    container_name: mdfmcp-server
+    volumes:
+      - ./data:/data
+      - ./logs:/app/logs
+    environment:
+      - MAX_SESSIONS=10
+      - SESSION_TIMEOUT=3600
+      - LOG_LEVEL=INFO
+    restart: unless-stopped
+    stdin_open: true
+    tty: true 
